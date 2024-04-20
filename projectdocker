@@ -1,1 +1,64 @@
+============================= Compose file.yml ========================
+version: '3'
+services:
+  movie:
+    image: kandimallanikhil/movie:latest
+     ports:
+       - "80:80"
+  train:
+    image: kandimallanikhil/train:latest
+    ports:
+      - "81:80"
+  dth:
+    image: kandimallanikhil/dth:latest
+    ports:
+      - "82:80"
+========================== Jenkins Code main code ==========================
+pipeline {
+    agent any
 
+    stages {
+        stage('git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kandimallanikhil/dockerproj.git'
+            }
+        }
+        stage('creating image')
+        {
+            steps{
+                sh 'docker build -t $image .'
+            }
+        }
+        stage('Creating a docker image from ')
+        {
+            steps{
+                sh 'docker tag $image $repo'
+            }
+        }
+        stage('pushing image to docker hub'){
+            steps{
+                sh 'docker login -u kandimallanikhil -p Confirm@143'
+                sh 'docker push $repo'
+            }
+        }
+        
+    }
+    
+}
+
+==========================  stack code ========================
+pipeline {
+    agent any
+    stages{
+stage('git Compose') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kandimallanikhil/dockerproj.git'
+            }
+    }
+    stage('stack'){
+        steps{
+            sh 'docker stack deploy -c docker-compose.yml nikhil'
+        }
+    }
+}
+}
