@@ -1,0 +1,14 @@
+version: '3'
+services:
+  movie:
+    image: kandimallanikhil/movie:latest
+    ports:
+      - "90:80"
+  train:
+    image: kandimallanikhil/train:latest
+    ports:
+      - "91:80"
+  dth:
+    image: kandimallanikhil/dth:latest
+    ports:
+      - "92:80"
