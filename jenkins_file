@@ -1,1 +1,56 @@
+####################################################################################################################################################3
+# step 1 : install jenkin and docker. 
+# step 2 in jenkins >manage jenkins> plugins (download all the plugins related to docker)
+# step 3 : in jenkins >manage jenkins> tools (configure docker)
+# step 4 : in jenkins >manage jenkins> credentials (add docker hub creds)
+# step 5  : to establish connection in pipline syntax generate ( withDockerRegestry: setup docker registry Endpoint > Add Registry credentials > Docker installation )
+#############################################################################################################################################################
+pipeline {
+    agent any
+    parameters {
+        string (name: "nikhil_kandimalla", defaultValue :'cholodec', description: "enter the image name" )
+        string (name: "kandimalla", defaultValue :'kandimallanikhil/knc:latest', description: "enter the image name" )
+    }
+
+    stages {
+        stage('clean') {
+            steps {
+               cleanWs()
+            }
+        }
+        stage('git') {
+            steps {
+             git branch: 'main', url: 'https://github.com/vijaygiduthuri/Netflix.git'
+            }
+        }
+        stage('Docker_image_build') {
+            steps {
+                sh " docker build -t ${params.nikhil_kandimalla} ."
+            }
+        }
+        stage('docker push and pull') {
+            steps {
+                script {
+                    // This step should not normally be used in your script. Consult the inline help for details.
+                       withDockerRegistry(credentialsId: 'Docker', toolName: 'Docker') {
+                     sh " docker tag ${params.nikhil_kandimalla} ${params.kandimalla}"
+                     sh " docker push ${params.kandimalla} "
+}
+                }
+            }
+        }
+        stage('docker rmi'){
+            steps{
+                 sh "docker rmi ${params.nikhil_kandimalla} ${params.kandimalla}"
+            }
+        }
+        stage('docker build'){
+            steps{
+                 sh "docker run -itd --name passing -p 4000:80 ${params.kandimalla}"
+            }
+        }
+        
+        
+    }
+}
 
