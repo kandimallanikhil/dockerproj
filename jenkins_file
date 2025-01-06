@@ -5,6 +5,19 @@
 # step 4 : in jenkins >manage jenkins> credentials (add docker hub creds)
 # step 5  : to establish connection in pipline syntax generate ( withDockerRegestry: setup docker registry Endpoint > Add Registry credentials > Docker installation )
 #############################################################################################################################################################
+#################### possible errors ##################################
+ # one :  /var/lib/jenkins/workspace/docker_img@tmp/durable-40379bbc/script.sh.copy: 1: Bad substitution
+# solution : The issue you're facing is related to the shell command string interpolation in your Jenkins pipeline. In Jenkins, the ${params.some_value} interpolation
+# does not work as expected when it's inside single quotes ('). In a shell command, the string inside single quotes is treated literally, 
+# so variable interpolation does not occur.
+#  To fix this issue, you should replace single quotes with double quotes ("), which allow shell variable interpolation.
+############################################################################################################################################
+# Second error : ERROR: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock:
+Head "http://%2Fvar%2Frun%2Fdocker.sock/_ping": dial unix /var/run/docker.sock: connect: permission denied
+# solution 1 : Add : sudo chmod 777 /var/run/docker.sock 
+# solution 2 : add : sudo usermod -aG docker ubuntu || newgrp docker
+# these two
+
 pipeline {
     agent any
     parameters {
