@@ -66,4 +66,226 @@ pipeline {
         
     }
 }
+###########################################################################################################################################
+# not sure if it works 
+pipeline {
+    agent any
+
+    stages {
+        stage('git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kandimallanikhil/dockerproj.git'
+            }
+        }
+        stage('creating image')
+        {
+            steps{
+                sh 'docker build -t $image .'
+            }
+        }
+        stage('Creating a docker image from ')
+        {
+            steps{
+                sh 'docker tag $image $repo'
+            }
+        }
+        stage('pushing image to docker hub'){
+            steps{
+                sh 'docker login -u kandimallanikhil -p Confirm@143'
+                sh 'docker push $repo'
+            }
+        }
+        stage('git Compose') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kandimallanikhil/dockerproj.git'
+            }
+    }
+    stage('stack'){
+        steps{
+            sh 'docker stack deploy -c docker-compose.yml nikhil'
+        }
+    }
+    }
+    
+}
+######################################################################################################
+Cloud Platforms:
+•	Amazon Web Services (AWS):
+o	Compute: EC2, Lambda, Auto Scaling
+o	Storage: S3, EBS, Glacier
+o	Database: RDS, DynamoDB, Aurora
+o	Networking: VPC, Route 53, CloudFront
+o	Management Tools: CloudFormation, CloudWatch, CloudTrail
+o	Security: IAM, KMS, Security Groups, NACLs
+•	Microsoft Azure: Virtual Machines, Azure DevOps, Azure Functions
+•	Google Cloud Platform (GCP): Compute Engine, Kubernetes Engine, Cloud Storage
+DevOps Tools:
+•	CI/CD:
+o	Jenkins: Pipeline creation and management
+o	GitLab CI/CD: Integration and deployment automation
+o	CircleCI: Continuous integration and deployment
+o	Travis CI: Continuous integration
+o	Bamboo: Continuous integration and deployment
+•	Containerization & Orchestration:
+o	Docker: Container creation and management
+o	Kubernetes: Cluster setup, management, and scaling
+o	OpenShift: Enterprise Kubernetes
+•	Infrastructure as Code (IaC):
+o	Terraform: Infrastructure provisioning and management
+o	AWS CloudFormation: Stack creation and management
+o	Pulumi: Infrastructure as code with general-purpose languages
+•	Configuration Management:
+o	Ansible: Automated configuration management and deployment
+o	Chef: Infrastructure automation
+o	Puppet: Configuration management
+o	SaltStack: Configuration management and automation
+Programming Languages:
+•	Python: Scripting for automation, AWS SDK (Boto3)
+•	Bash: Shell scripting for task automation
+•	Go: Development and automation
+•	Ruby: Scripting and automation
+•	Other Languages: YAML (for configuration files), JSON (for data interchange), PowerShell (for Windows automation)
+Monitoring & Logging:
+•	AWS CloudWatch: Monitoring and logging
+•	Prometheus: Monitoring and alerting
+•	Grafana: Visualization and dashboard creation
+•	ELK Stack (Elasticsearch, Logstash, Kibana): Log management and analysis
+•	Splunk: Log management and analysis
+•	Nagios: Monitoring
+•	Datadog: Monitoring and analytics
+Version Control:
+•	Git: Version control and repository management
+•	GitHub: Collaboration and code review
+•	GitLab: CI/CD pipeline integration
+•	Bitbucket: Source code management and CI/CD
+•	SVN: Version control
+Security:
+•	IAM (Identity and Access Management): Role and policy creation and management
+•	Security Groups & NACLs: Network security configuration
+•	AWS WAF (Web Application Firewall): Application security
+•	KMS (Key Management Service): Data encryption and key management
+•	Secrets Management: HashiCorp Vault, AWS Secrets Manager
+•	Compliance: Ensuring compliance with standards like GDPR, HIPAA, and SOC 2
+Networking:
+•	VPC Configuration: Subnetting, routing, and VPN setup
+•	Load Balancing: ELB (Elastic Load Balancer), ALB (Application Load Balancer)
+•	DNS Management: Route 53 configuration
+•	Firewall Configuration: AWS WAF, Security Groups, NACLs
+Automation:
+•	Scripting: Automated workflows with Python, Bash, Go, and Ruby
+•	CI/CD Pipelines: Automated build, test, and deployment processes
+Performance Optimization:
+•	Resource Allocation: Efficient use of cloud resources to optimize performance and cost
+•	Cost Optimization: Strategies to reduce cloud spend while maintaining performance
+•	Scaling: Implementing auto-scaling solutions to handle variable workloads
+Collaboration Tools:
+•	Jira: Project management and issue tracking
+•	Confluence: Documentation and knowledge sharing
+•	Slack: Team communication and collaboration
+•	Trello: Task management and collaboration
+############################################################################################################
+Sonarqube Webhook code :
+
+***JENKINS_SERVER_URL***/job/***JENKINS_JOB_NAME***/build?token=***JENKINS_BUILD_TRIGGER_TOKEN***
+
+Maven : Jenkins file.
+node {
+  stage('SCM') {
+    checkout scm
+  }
+  stage('SonarQube Analysis') {
+    def mvn = tool 'Default Maven';
+    withSonarQubeEnv() {
+      sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=nikhil"
+    }
+  }
+}
+sh """
+           mvn sonar:sonar \
+           -Dsonar.host.url=http://51.20.52.98:9000 \
+           -Dsonar.login=sqa_db896e64253358971b6f157fc59654f1069b13e8 \
+           -Dsonar.projectKey=nikhil \
+           -Dsonar.projectName=nikhil \
+           -Dsonar.sources=src/main/java
+           """
+
+Jenkins_sonar int tocken :
+sqa_db896e64253358971b6f157fc59654f1069b13e8 	
+
+
+pipeline {
+    agent any
+    tools{
+        maven 'maven'
+    }
+
+    stages {
+        stage('git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/jaiswaladi246/Petclinic.git'
+            }
+        }
+        stage('maven') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        stage('sonar') {
+            steps {
+                   sh """
+           mvn sonar:sonar \
+           -Dsonar.host.url=http://51.20.52.98:9000 \
+           -Dsonar.login=sqa_db896e64253358971b6f157fc59654f1069b13e8 \
+           -Dsonar.projectKey=nikhil \
+           -Dsonar.projectName=nikhil \
+           -Dsonar.sources=src/main/java
+           """
+            }
+        }
+        
+    }
+}
+================== 
+pipeline {
+    agent any
+    tools{
+        maven 'maven'
+    }
+    environment {
+        // SonarQube server URL
+        nikhil1 = 'http://51.20.52.98:9000/'
+        // SonarQube token stored in Jenkins credentials
+        nikhil2 = credentials('SonarQubepass')  // 'sonarqube_token' is the ID of the stored credential
+    }
+
+    stages {
+        stage('git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/jaiswaladi246/Petclinic.git'
+            }
+        }
+        stage('maven') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        stage('sonar') {
+            steps {
+                   sh """
+           mvn sonar:sonar \
+           -Dsonar.host.url=${nikhil1} \
+           -Dsonar.login=${nikhil2} \
+           -Dsonar.projectKey=nikhil \
+           -Dsonar.projectName=nikhil \
+           -Dsonar.sources=src/main/java
+           """
+            }
+        }
+        
+    }
+}
+#######################################################################################################################################
+
+	
+	
 
